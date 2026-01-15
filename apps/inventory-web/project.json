@@ -1,0 +1,19 @@
+{
+  "name": "@org/inventory-web",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "options": {
+        "outputPath": "dist/apps/inventory-web"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "@org/inventory-web:build",
+        "dev": true
+      }
+    }
+  }
+}
