@@ -1,11 +1,11 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import { transferBetweenWarehouses } from '@/app/actions/inventory';
+import { deliverToWarehouse } from '@/app/actions/inventory';
 import { useActionState, useEffect, useRef } from 'react';
 import { Warehouse } from '@/app/types/api';
 
-interface TransferFormProps {
+interface DeliveryFormProps {
   warehouses: Warehouse[];
 }
 
@@ -16,27 +16,27 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+      className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
     >
-      {pending ? 'Transferring...' : 'Transfer'}
+      {pending ? 'Delivering...' : 'Deliver'}
     </button>
   );
 }
 
-export function TransferForm({ warehouses }: TransferFormProps) {
-  const [state, formAction] = useActionState(transferBetweenWarehouses, null);
+export function DeliveryForm({ warehouses }: DeliveryFormProps) {
+  const [state, formAction] = useActionState(deliverToWarehouse, null);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state?.success) {
       formRef.current?.reset();
-      alert('Transfer successful!');
+      alert('Delivery successful!');
     }
   }, [state]);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Transfer Between Warehouses</h2>
+      <h2 className="text-2xl font-bold mb-6">Deliver to Warehouse</h2>
 
       <form ref={formRef} action={formAction} className="space-y-4">
         <div>
@@ -49,46 +49,24 @@ export function TransferForm({ warehouses }: TransferFormProps) {
             name="itemSku"
             required
             placeholder="SKU-001"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
         <div>
           <label
-            htmlFor="fromLocationId"
+            htmlFor="locationId"
             className="block text-sm font-medium mb-1"
           >
-            From Location
+            Warehouse Location
           </label>
           <select
-            id="fromLocationId"
-            name="fromLocationId"
+            id="locationId"
+            name="locationId"
             required
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="">Select source warehouse</option>
-            {warehouses?.map((warehouse) => (
-              <option key={warehouse.id} value={warehouse.id}>
-                {warehouse.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor="toLocationId"
-            className="block text-sm font-medium mb-1"
-          >
-            To Location
-          </label>
-          <select
-            id="toLocationId"
-            name="toLocationId"
-            required
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select destination warehouse</option>
+            <option value="">Select warehouse</option>
             {warehouses?.map((warehouse) => (
               <option key={warehouse.id} value={warehouse.id}>
                 {warehouse.name}
@@ -107,8 +85,8 @@ export function TransferForm({ warehouses }: TransferFormProps) {
             name="quantity"
             required
             min="1"
-            placeholder="10"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="100"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 

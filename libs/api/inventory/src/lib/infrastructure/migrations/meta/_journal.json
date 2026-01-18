@@ -8,6 +8,20 @@
       "when": 1768738559781,
       "tag": "0000_initial-schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768746918789,
+      "tag": "0001_add-warehouse-name",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768747036186,
+      "tag": "0002_mocked-data",
+      "breakpoints": true
     }
   ]
 }

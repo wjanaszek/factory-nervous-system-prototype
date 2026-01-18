@@ -7,10 +7,12 @@ import { warehouseEntity } from './warehouse.entity';
 export const warehouseOperatorEntity = pgTable('warehouse_operator', {
   id: uuid().primaryKey(),
   name: text().notNull(),
-  locationId: uuid()
+  locationId: uuid('location_id')
     .notNull()
     .references(() => warehouseEntity.id),
-  createdAt: timestamp({ withTimezone: true }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const warehouseOperatorEntityRelations = relations(

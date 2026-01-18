@@ -7,7 +7,8 @@ import { clientEntity } from './client.entity';
 export const warehouseEntity = pgTable('warehouse', {
   id: uuid().primaryKey(),
   address: text().notNull(), // simplification
-  clientId: uuid()
+  name: text().notNull().default('Test warehouse'),
+  clientId: uuid('client_id')
     .notNull()
     .references(() => clientEntity.id),
 });

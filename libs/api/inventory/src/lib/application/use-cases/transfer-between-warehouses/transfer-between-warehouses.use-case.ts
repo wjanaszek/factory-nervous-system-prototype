@@ -7,6 +7,7 @@ import { Result } from '../../../domain/shared/result';
 import { ItemSkuVO } from '../../../domain/value-objects/item-sku.value-object';
 import { QuantityVO } from '../../../domain/value-objects/quantity.value-object';
 import { InventoryStockTransferService } from '../../../domain/services/inventory-stock-transfer.service';
+import { InventoryStockAggregate } from '../../../domain/aggregates/inventory-stock.aggregate';
 
 type TransferBetweenWarehousesInput = {
   body: TransferBetweenWarehousesBody;
@@ -43,13 +44,18 @@ export class TransferBetweenWarehousesUseCase
         return Result.fail('No enough stock items');
       }
 
-      const toStock = await this.inventoryStockRepository.findBySkuAndWarehouse(
+      let toStock = await this.inventoryStockRepository.findBySkuAndWarehouse(
         itemSku,
         body.toLocation.id
       );
 
       if (!toStock) {
-        return Result.fail('No stock to transfer items to found');
+        toStock = InventoryStockAggregate.create({
+          itemSku,
+          quantity: QuantityVO.zero(),
+          warehouseId: body.toLocation.id,
+          version: 1,
+        });
       }
 
       if (fromStock.warehouseId === toStock.warehouseId) {

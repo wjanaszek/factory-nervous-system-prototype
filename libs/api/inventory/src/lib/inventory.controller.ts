@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { DeliverToWarehouseUseCase } from './application/use-cases/deliver-to-warehouse/deliver-to-warehouse.use-case';
 import { TransferBetweenWarehousesUseCase } from './application/use-cases/transfer-between-warehouses/transfer-between-warehouses.use-case';
 import { DeliverToWarehouseBody } from './application/use-cases/deliver-to-warehouse/deliver-to-warehouse.body';
@@ -20,12 +28,38 @@ export class InventoryController {
 
   @Post('deliver-to-warehouse')
   async deliverToWarehouse(@Body() body: DeliverToWarehouseBody) {
-    await this.deliverToWarehouseUseCase.execute({ body });
+    const result = await this.deliverToWarehouseUseCase.execute({ body });
+
+    if (result.isFailure) {
+      throw new HttpException(
+        result.error || 'Failed to deliver to warehouse',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return {
+      success: true,
+      data: result.getValue(),
+    };
   }
 
   @Post('transfer-between-warehouses')
   async transferBetweenWarehouses(@Body() body: TransferBetweenWarehousesBody) {
-    await this.transferBetweenWarehousesUseCase.execute({ body });
+    const result = await this.transferBetweenWarehousesUseCase.execute({
+      body,
+    });
+
+    if (result.isFailure) {
+      throw new HttpException(
+        result.error || 'Failed to transfer',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return {
+      success: true,
+      data: result.getValue(),
+    };
   }
 
   @Get('stock/:itemSku/:locationId')
@@ -33,9 +67,21 @@ export class InventoryController {
     @Param('itemSku') itemSku: string,
     @Param('locationId') locationId: string
   ) {
-    return this.listStockForItemInLocationUseCase.execute({
+    const result = await this.listStockForItemInLocationUseCase.execute({
       body: { itemSku, locationId },
     });
+
+    if (result.isFailure) {
+      throw new HttpException(
+        result.error || 'Failed to get stock',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return {
+      success: true,
+      data: result.getValue(),
+    };
   }
 
   @Get('warehouses')

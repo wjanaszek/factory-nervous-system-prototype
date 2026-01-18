@@ -3,6 +3,10 @@ import { InventoryStockAggregate } from '../aggregates/inventory-stock.aggregate
 import { Result } from '../shared/result';
 
 export abstract class InventoryStockRepository {
+  abstract findAllByWarehouse(
+    warehouseId: string
+  ): Promise<InventoryStockAggregate[]>;
+
   abstract findBySkuAndWarehouse(
     sku: ItemSkuVO,
     warehouseId: string

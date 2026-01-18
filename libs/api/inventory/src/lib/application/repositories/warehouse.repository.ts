@@ -1,3 +1,8 @@
+export interface Warehouse {
+  id: string;
+  name: string;
+}
+
 export abstract class WarehouseRepository {
-  abstract list(): Promise<any>;
+  abstract list(): Promise<Warehouse[]>;
 }

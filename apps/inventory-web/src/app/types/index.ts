@@ -1,2 +1,2 @@
-export * from './warehouse';
+export * from './api';
 export * from './id';

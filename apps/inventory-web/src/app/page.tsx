@@ -1,40 +1,25 @@
-import React from 'react';
-import { Package } from 'lucide-react';
-import StockOverview from '@/app/server/StockOverview';
-import TransferForm from '@/app/ui/TransferForm';
-import { getLocations } from '@/app/lib/warehouse-service';
+import { TransferForm } from './ui/TransferForm';
+import { DeliveryForm } from './ui/DeliveryForm';
+import { WarehouseList } from './ui/WarehouseList';
+import { StockChecker } from './ui/StockChecker';
+import { getWarehouses } from './actions/inventory';
 
-export const dynamic = 'force-dynamic';
-
-export const metadata = {
-  title: 'Warehouse Management System',
-  description: 'Real-time inventory tracking and transfers',
-};
-
-export default async function WarehousePage() {
-  const locations = await getLocations();
+export default async function DashboardPage() {
+  const warehouses = await getWarehouses();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <Package className="w-8 h-8" />
-            Warehouse Management System
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Real-time inventory tracking and transfers
-          </p>
-        </header>
+        <h1 className="text-4xl font-bold mb-8">Inventory Management</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <StockOverview locations={locations} />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <DeliveryForm warehouses={warehouses} />
+          <TransferForm warehouses={warehouses} />
+        </div>
 
-          <div className="lg:col-span-1">
-            <TransferForm locations={locations} />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <StockChecker warehouses={warehouses} />
+          <WarehouseList />
         </div>
       </div>
     </div>

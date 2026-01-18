@@ -1,5 +1,8 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { WarehouseRepository } from '../../application/repositories/warehouse.repository';
+import {
+  Warehouse,
+  WarehouseRepository,
+} from '../../application/repositories/warehouse.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { PostgresDb } from '../database/database.const';
 import { warehouseEntity } from '../entities/warehouse.entity';
@@ -8,7 +11,7 @@ import { warehouseEntity } from '../entities/warehouse.entity';
 export class DrizzlePgWarehouseRepository implements WarehouseRepository {
   constructor(@Inject(PostgresDb) private readonly db: NodePgDatabase) {}
 
-  async list(): Promise<any> {
+  async list(): Promise<Warehouse[]> {
     const result = await this.db.select().from(warehouseEntity);
 
     return result;

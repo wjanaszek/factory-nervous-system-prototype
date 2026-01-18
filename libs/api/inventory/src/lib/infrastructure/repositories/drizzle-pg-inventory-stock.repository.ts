@@ -18,6 +18,17 @@ export class DrizzlePgInventoryStockRepository
 {
   constructor(@Inject(PostgresDb) private readonly db: NodePgDatabase) {}
 
+  async findAllByWarehouse(
+    warehouseId: string
+  ): Promise<InventoryStockAggregate[]> {
+    const results = await this.db
+      .select()
+      .from(inventoryStockEntity)
+      .where(eq(inventoryStockEntity.location, warehouseId));
+
+    return results.map(this.toDomain);
+  }
+
   async findBySkuAndWarehouse(
     sku: ItemSkuVO,
     warehouseId: string
