@@ -9,6 +9,7 @@ import { ListStockForItemInLocationUseCase } from './application/use-cases/list-
 import { EventBus } from './application/shared/event-bus';
 import { InventoryReceivedDomainEvent } from './domain/events/inventory-received.domain-event';
 import { InventoryTransferredDomainEvent } from './domain/events/inventory-transferred.domain-event';
+import { ListWarehousesUseCase } from './application/use-cases/list-warehouses/list-warehouses.use-case';
 
 const EventHandlers = [
   InventoryReceivedEventHandler,
@@ -17,6 +18,7 @@ const EventHandlers = [
 const UseCases = [
   DeliverToWarehouseUseCase,
   ListStockForItemInLocationUseCase,
+  ListWarehousesUseCase,
   TransferBetweenWarehousesUseCase,
 ];
 

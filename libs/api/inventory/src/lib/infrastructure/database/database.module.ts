@@ -10,6 +10,8 @@ import { InventoryTransactionLogRepository } from '../../application/repositorie
 import { DrizzlePgInventoryTransactionLogRepository } from '../repositories/drizzle-pg-inventory-transaction-log.repository';
 import { ConfigService } from '@nestjs/config';
 import { PostgresDb } from './database.const';
+import { DrizzlePgWarehouseRepository } from '../repositories/drizzle-pg-warehouse.repository';
+import { WarehouseRepository } from '../../application/repositories/warehouse.repository';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { PostgresDb } from './database.const';
   providers: [
     DrizzlePgInventoryStockRepository,
     DrizzlePgInventoryTransactionLogRepository,
+    DrizzlePgWarehouseRepository,
     {
       provide: InventoryStockRepository,
       useClass: DrizzlePgInventoryStockRepository,
@@ -51,11 +54,16 @@ import { PostgresDb } from './database.const';
       provide: InventoryTransactionLogRepository,
       useClass: DrizzlePgInventoryTransactionLogRepository,
     },
+    {
+      provide: WarehouseRepository,
+      useClass: DrizzlePgWarehouseRepository,
+    },
   ],
   exports: [
     DrizzlePostgresModule,
     InventoryStockRepository,
     InventoryTransactionLogRepository,
+    WarehouseRepository,
   ],
 })
 export class DatabaseModule {}
