@@ -2,21 +2,37 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:api": "npx nx serve inventory-api",
+    "start:web": "npx nx serve inventory-web",
+    "db:generate": "drizzle-kit generate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
+    "db:push": "drizzle-kit push --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
+    "db:drop": "drizzle-kit drop --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts"
+  },
   "private": true,
   "dependencies": {
+    "@knaadh/nestjs-drizzle-postgres": "^1.2.0",
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.6.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "drizzle-zod": "^0.8.3",
     "express": "^4.21.2",
     "lucide-react": "^0.562.0",
     "next": "~16.0.1",
+    "pg": "^8.17.1",
+    "postgres": "^3.4.8",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "6.29.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
@@ -62,6 +78,7 @@
     "@vitest/ui": "4.0.9",
     "autoprefixer": "10.4.13",
     "babel-jest": "^30.0.2",
+    "drizzle-kit": "^0.31.8",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-next": "^16.0.1",
@@ -93,10 +110,9 @@
     "webpack-cli": "^5.1.4"
   },
   "workspaces": [
-    "apps/*",
-    "libs/api/products",
-    "libs/shared/*",
-    "libs/shop/*",
-    "inventory-web"
+    "apps/inventory-api",
+    "apps/inventory-web",
+    "libs/api/*",
+    "libs/shared/*"
   ]
 }

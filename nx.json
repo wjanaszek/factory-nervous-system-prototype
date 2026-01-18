@@ -29,7 +29,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/shared/models/*"]
+      "exclude": [
+        "libs/shared/models/*",
+        "libs/api/inventory/*",
+        "libs/shared/domain/*"
+      ]
     },
     {
       "plugin": "@nx/react/router-plugin",
@@ -70,7 +74,11 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/shared/models/*"],
+      "include": [
+        "libs/shared/models/*",
+        "libs/api/inventory/*",
+        "libs/shared/domain/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"
