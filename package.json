@@ -5,6 +5,7 @@
   "scripts": {
     "start:api": "npx nx serve inventory-api",
     "start:web": "npx nx serve inventory-web",
+    "test": "npx nx test inventory",
     "db:generate": "drizzle-kit generate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
