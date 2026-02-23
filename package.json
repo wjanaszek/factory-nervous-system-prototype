@@ -6,6 +6,7 @@
     "start:api": "npx nx serve inventory-api",
     "start:web": "npx nx serve inventory-web",
     "test": "npx nx test inventory",
+    "test:integration": "npx nx e2e inventory-api-e2e",
     "db:generate": "drizzle-kit generate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=libs/api/inventory/src/lib/infrastructure/database/drizzle.config.ts",
@@ -112,7 +113,9 @@
   },
   "workspaces": [
     "apps/inventory-api",
+    "apps/inventory-api-e2e",
     "apps/inventory-web",
+    "apps/inventory-web-e2e",
     "libs/api/*",
     "libs/shared/*"
   ]

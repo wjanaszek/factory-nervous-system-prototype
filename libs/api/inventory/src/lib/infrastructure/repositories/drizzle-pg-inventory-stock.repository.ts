@@ -63,11 +63,16 @@ export class DrizzlePgInventoryStockRepository
           target: [inventoryStockEntity.id],
           set: {
             quantity: entity.quantity,
-            version: entity.version,
+            version: entity.version + 1,
             updatedAt: entity.updatedAt,
           },
+          setWhere: eq(inventoryStockEntity.version, entity.version),
         })
         .returning();
+
+      if (!result) {
+        return Result.fail('Inventory stock version mismatch');
+      }
 
       return Result.ok(this.toDomain(result));
     } catch (error) {

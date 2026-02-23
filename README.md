@@ -55,6 +55,12 @@ npm run start:web
 npm run test
 ```
 
+### How to run integration tests for API?
+
+```
+npm run test:integration
+```
+
 ### How to run e2e test for Web?
 
 TBD
