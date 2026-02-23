@@ -54,27 +54,7 @@ export class DrizzlePgInventoryStockRepository
     aggregate: InventoryStockAggregate
   ): Promise<Result<InventoryStockAggregate>> {
     try {
-      const entity = this.toEntity(aggregate);
-
-      const [result] = await this.db
-        .insert(inventoryStockEntity)
-        .values(entity)
-        .onConflictDoUpdate({
-          target: [inventoryStockEntity.id],
-          set: {
-            quantity: entity.quantity,
-            version: entity.version + 1,
-            updatedAt: entity.updatedAt,
-          },
-          setWhere: eq(inventoryStockEntity.version, entity.version),
-        })
-        .returning();
-
-      if (!result) {
-        return Result.fail('Inventory stock version mismatch');
-      }
-
-      return Result.ok(this.toDomain(result));
+      return await this.saveWithOptimisticLocking(this.db, aggregate);
     } catch (error) {
       return Result.fail(
         error instanceof Error
@@ -82,6 +62,59 @@ export class DrizzlePgInventoryStockRepository
           : 'Failed to save inventory stock'
       );
     }
+  }
+
+  async saveMany(
+    aggregates: InventoryStockAggregate[]
+  ): Promise<Result<InventoryStockAggregate[]>> {
+    try {
+      const results = await this.db.transaction(async (tx) => {
+        const saved: InventoryStockAggregate[] = [];
+        for (const aggregate of aggregates) {
+          const result = await this.saveWithOptimisticLocking(tx, aggregate);
+          if (result.isFailure) {
+            throw new Error(result.error || 'Failed to save inventory stock');
+          }
+          saved.push(result.getValue());
+        }
+        return saved;
+      });
+
+      return Result.ok(results);
+    } catch (error) {
+      return Result.fail(
+        error instanceof Error
+          ? error.message
+          : 'Failed to save inventory stock'
+      );
+    }
+  }
+
+  private async saveWithOptimisticLocking(
+    db: NodePgDatabase,
+    aggregate: InventoryStockAggregate
+  ): Promise<Result<InventoryStockAggregate>> {
+    const entity = this.toEntity(aggregate);
+
+    const [result] = await db
+      .insert(inventoryStockEntity)
+      .values(entity)
+      .onConflictDoUpdate({
+        target: [inventoryStockEntity.id],
+        set: {
+          quantity: entity.quantity,
+          version: entity.version + 1,
+          updatedAt: entity.updatedAt,
+        },
+        setWhere: eq(inventoryStockEntity.version, entity.version),
+      })
+      .returning();
+
+    if (!result) {
+      return Result.fail('Inventory stock version mismatch');
+    }
+
+    return Result.ok(this.toDomain(result));
   }
 
   private toDomain(entity: InventoryStock): InventoryStockAggregate {

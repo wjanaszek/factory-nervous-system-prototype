@@ -74,8 +74,15 @@ export class TransferBetweenWarehousesUseCase
         return Result.fail(transferResult.error!);
       }
 
-      await this.inventoryStockRepository.save(fromStock);
-      await this.inventoryStockRepository.save(toStock);
+      const saveResult = await this.inventoryStockRepository.saveMany([
+        fromStock,
+        toStock,
+      ]);
+
+      if (saveResult.isFailure) {
+        return Result.fail(saveResult.error!);
+      }
+
       await this.eventBus.publishAll([
         ...fromStock.domainEvents,
         ...toStock.domainEvents,

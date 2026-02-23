@@ -15,4 +15,8 @@ export abstract class InventoryStockRepository {
   abstract save(
     inventoryStock: InventoryStockAggregate
   ): Promise<Result<InventoryStockAggregate>>;
+
+  abstract saveMany(
+    inventoryStocks: InventoryStockAggregate[]
+  ): Promise<Result<InventoryStockAggregate[]>>;
 }
